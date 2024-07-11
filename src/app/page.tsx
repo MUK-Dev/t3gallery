@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { db } from "~/server/db";
+import { getMyImages } from "~/server/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -9,21 +9,19 @@ const mockUrls = [
   "https://utfs.io/f/4b798a0e-d034-42c5-8579-dce51187ac8c-tpk6wk.com_wallpaper.jpg",
 ];
 
-const mockImages = mockUrls.map((url, index) => ({
-  id: index + 1,
-  url,
-}));
+// const mockImages = mockUrls.map((url, index) => ({
+//   id: index + 1,
+//   url,
+// }));
 
 async function Images() {
-  const images = await db.query.images.findMany({
-    orderBy: (model, { desc }) => desc(model.id),
-  });
+  const images = await getMyImages();
 
   return (
     <div className="flex flex-wrap gap-4">
       {images.map((img) => (
         <div key={img.id} className="flex w-48 flex-col">
-          <img src={img.url} />
+          <img src={img.url} alt={img.url} />
           <div>{img.name}</div>
         </div>
       ))}
